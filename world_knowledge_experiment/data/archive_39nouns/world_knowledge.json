@@ -1,0 +1,84 @@
+{
+  "archive_note": "60名詞版へ拡張する前の39名詞版である。",
+  "attributes": [
+    "animate",
+    "living",
+    "animal",
+    "human",
+    "has_legs",
+    "has_wings",
+    "aquatic",
+    "artifact",
+    "vehicle",
+    "powered",
+    "has_hands",
+    "plant"
+  ],
+  "subjects": {
+    "cat": ["animate", "living", "animal", "has_legs"],
+    "dog": ["animate", "living", "animal", "has_legs"],
+    "horse": ["animate", "living", "animal", "has_legs"],
+    "lion": ["animate", "living", "animal", "has_legs"],
+    "bear": ["animate", "living", "animal", "has_legs"],
+    "fish": ["animate", "living", "animal", "aquatic"],
+    "seal": ["animate", "living", "animal", "aquatic"],
+    "eagle": ["animate", "living", "animal", "has_legs", "has_wings"],
+    "duck": ["animate", "living", "animal", "has_legs", "has_wings", "aquatic"],
+    "bat": ["animate", "living", "animal", "has_legs", "has_wings"],
+    "man": ["animate", "living", "human", "has_legs", "has_hands"],
+    "woman": ["animate", "living", "human", "has_legs", "has_hands"],
+    "teacher": ["animate", "living", "human", "has_legs", "has_hands"],
+    "adult": ["animate", "living", "human", "has_legs", "has_hands"],
+    "robot": ["artifact", "powered", "has_legs", "has_hands"],
+    "car": ["artifact", "vehicle", "powered"],
+    "truck": ["artifact", "vehicle", "powered"],
+    "train": ["artifact", "vehicle", "powered"],
+    "plane": ["artifact", "vehicle", "powered", "has_wings"],
+    "helicopter": ["artifact", "vehicle", "powered"],
+    "boat": ["artifact", "vehicle", "aquatic"],
+    "computer": ["artifact", "powered"],
+    "book": ["artifact"],
+    "chair": ["artifact", "has_legs"],
+    "tree": ["living", "plant"],
+    "oak": ["living", "plant"],
+    "rock": [],
+    "tiger": ["animate", "living", "animal", "has_legs"],
+    "elephant": ["animate", "living", "animal", "has_legs"],
+    "chicken": ["animate", "living", "animal", "has_legs", "has_wings"],
+    "child": ["animate", "living", "human", "has_legs", "has_hands"],
+    "student": ["animate", "living", "human", "has_legs", "has_hands"],
+    "bus": ["artifact", "vehicle", "powered"],
+    "bicycle": ["artifact", "vehicle"],
+    "ship": ["artifact", "vehicle", "powered", "aquatic"],
+    "phone": ["artifact", "powered"],
+    "table": ["artifact", "has_legs"],
+    "stone": [],
+    "rose": ["living", "plant"]
+  },
+  "verbs": {
+    "fly": {
+      "requires": ["has_wings"]
+    },
+    "walk": {
+      "requires": ["has_legs"]
+    },
+    "eat": {
+      "requires": ["animate"]
+    },
+    "speak": {
+      "requires": ["animate"]
+    },
+    "float": {
+      "requires": ["aquatic"]
+    },
+    "grow": {
+      "requires": ["living"]
+    },
+    "sleep": {
+      "requires": ["animate"]
+    },
+    "think": {
+      "requires": ["living"]
+    }
+  }
+}

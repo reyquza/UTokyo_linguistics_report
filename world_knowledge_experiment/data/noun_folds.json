@@ -1,0 +1,25 @@
+{
+  "note": "5つのfoldが同程度の大きさになり、動物・人間・機械・人工物・植物や自然物が各foldに入るよう、カテゴリごとの語彙リストを順番に配分した。",
+  "folds": [
+    {
+      "name": "fold_1",
+      "test_nouns": ["cat", "tiger", "duck", "man", "student", "writer", "robot", "helicopter", "computer", "book", "tree", "wheat"]
+    },
+    {
+      "name": "fold_2",
+      "test_nouns": ["dog", "elephant", "chicken", "woman", "doctor", "engineer", "car", "boat", "phone", "chair", "oak", "apple"]
+    },
+    {
+      "name": "fold_3",
+      "test_nouns": ["horse", "fish", "bat", "teacher", "farmer", "truck", "bus", "jet", "table", "ball", "rose", "bread"]
+    },
+    {
+      "name": "fold_4",
+      "test_nouns": ["lion", "seal", "fox", "adult", "driver", "train", "bicycle", "aircraft", "bed", "cup", "plant", "rock"]
+    },
+    {
+      "name": "fold_5",
+      "test_nouns": ["bear", "eagle", "wolf", "sheep", "child", "pilot", "plane", "ship", "desk", "bottle", "corn", "stone"]
+    }
+  ]
+}

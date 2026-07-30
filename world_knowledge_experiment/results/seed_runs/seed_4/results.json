@@ -1,0 +1,1000 @@
+{
+  "config": {
+    "embeddings": "C:\\Projects\\NLP\\cbow_params.pkl",
+    "embedding_shape": [
+      10000,
+      100
+    ],
+    "seed": 4,
+    "shuffle_seed": 20264730,
+    "hidden_size": 32,
+    "epochs": 100,
+    "batch_size": 32,
+    "learning_rate": 0.01,
+    "weight_decay": 0.0001
+  },
+  "data": {
+    "nouns": [
+      "cat",
+      "tiger",
+      "duck",
+      "man",
+      "student",
+      "writer",
+      "robot",
+      "helicopter",
+      "computer",
+      "book",
+      "tree",
+      "wheat",
+      "dog",
+      "elephant",
+      "chicken",
+      "woman",
+      "doctor",
+      "engineer",
+      "car",
+      "boat",
+      "phone",
+      "chair",
+      "oak",
+      "apple",
+      "horse",
+      "fish",
+      "bat",
+      "teacher",
+      "farmer",
+      "truck",
+      "bus",
+      "jet",
+      "table",
+      "ball",
+      "rose",
+      "bread",
+      "lion",
+      "seal",
+      "fox",
+      "adult",
+      "driver",
+      "train",
+      "bicycle",
+      "aircraft",
+      "bed",
+      "cup",
+      "plant",
+      "rock",
+      "bear",
+      "eagle",
+      "wolf",
+      "sheep",
+      "child",
+      "pilot",
+      "plane",
+      "ship",
+      "desk",
+      "bottle",
+      "corn",
+      "stone"
+    ],
+    "verbs": [
+      "fly",
+      "walk",
+      "eat",
+      "speak",
+      "float",
+      "grow",
+      "sleep",
+      "think",
+      "read",
+      "write",
+      "cook",
+      "hunt"
+    ],
+    "attributes": [
+      "physical",
+      "mobile",
+      "animate",
+      "living",
+      "animal",
+      "human",
+      "adult",
+      "plant",
+      "food",
+      "artifact",
+      "vehicle",
+      "machine",
+      "furniture",
+      "aquatic",
+      "has_legs",
+      "has_wings",
+      "has_hands",
+      "has_wheels",
+      "powered"
+    ],
+    "noun_count": 60,
+    "pair_count": 720,
+    "positive_rate": 0.31666666666666665,
+    "fold_count": 5,
+    "embedding_input_size": 200,
+    "knowledge_input_size": 257
+  },
+  "folds": [
+    {
+      "name": "fold_1",
+      "train_nouns": [
+        "dog",
+        "elephant",
+        "chicken",
+        "woman",
+        "doctor",
+        "engineer",
+        "car",
+        "boat",
+        "phone",
+        "chair",
+        "oak",
+        "apple",
+        "horse",
+        "fish",
+        "bat",
+        "teacher",
+        "farmer",
+        "truck",
+        "bus",
+        "jet",
+        "table",
+        "ball",
+        "rose",
+        "bread",
+        "lion",
+        "seal",
+        "fox",
+        "adult",
+        "driver",
+        "train",
+        "bicycle",
+        "aircraft",
+        "bed",
+        "cup",
+        "plant",
+        "rock",
+        "bear",
+        "eagle",
+        "wolf",
+        "sheep",
+        "child",
+        "pilot",
+        "plane",
+        "ship",
+        "desk",
+        "bottle",
+        "corn",
+        "stone"
+      ],
+      "test_nouns": [
+        "cat",
+        "tiger",
+        "duck",
+        "man",
+        "student",
+        "writer",
+        "robot",
+        "helicopter",
+        "computer",
+        "book",
+        "tree",
+        "wheat"
+      ],
+      "train_pairs": 576,
+      "test_pairs": 144,
+      "test_positive_rate": 0.4027777777777778,
+      "metrics": {
+        "majority": {
+          "accuracy": 0.5972222222222222,
+          "balanced_accuracy": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "confusion_matrix": {
+            "tn": 86,
+            "fp": 0,
+            "fn": 58,
+            "tp": 0
+          }
+        },
+        "embedding_mlp": {
+          "accuracy": 0.7916666666666666,
+          "balanced_accuracy": 0.7694466720128308,
+          "precision": 0.7916666666666666,
+          "recall": 0.6551724137931034,
+          "f1": 0.7169811320754716,
+          "confusion_matrix": {
+            "tn": 76,
+            "fp": 10,
+            "fn": 20,
+            "tp": 38
+          }
+        },
+        "shuffled_knowledge_mlp": {
+          "accuracy": 0.75,
+          "balanced_accuracy": 0.7233360064153969,
+          "precision": 0.7391304347826086,
+          "recall": 0.5862068965517241,
+          "f1": 0.6538461538461539,
+          "confusion_matrix": {
+            "tn": 74,
+            "fp": 12,
+            "fn": 24,
+            "tp": 34
+          }
+        },
+        "knowledge_rule": {
+          "accuracy": 0.75,
+          "balanced_accuracy": 0.7738572574178028,
+          "precision": 0.6341463414634146,
+          "recall": 0.896551724137931,
+          "f1": 0.7428571428571429,
+          "confusion_matrix": {
+            "tn": 56,
+            "fp": 30,
+            "fn": 6,
+            "tp": 52
+          }
+        },
+        "knowledge_mlp": {
+          "accuracy": 0.9513888888888888,
+          "balanced_accuracy": 0.9424619085805934,
+          "precision": 0.9811320754716981,
+          "recall": 0.896551724137931,
+          "f1": 0.9369369369369369,
+          "confusion_matrix": {
+            "tn": 85,
+            "fp": 1,
+            "fn": 6,
+            "tp": 52
+          }
+        }
+      }
+    },
+    {
+      "name": "fold_2",
+      "train_nouns": [
+        "cat",
+        "tiger",
+        "duck",
+        "man",
+        "student",
+        "writer",
+        "robot",
+        "helicopter",
+        "computer",
+        "book",
+        "tree",
+        "wheat",
+        "horse",
+        "fish",
+        "bat",
+        "teacher",
+        "farmer",
+        "truck",
+        "bus",
+        "jet",
+        "table",
+        "ball",
+        "rose",
+        "bread",
+        "lion",
+        "seal",
+        "fox",
+        "adult",
+        "driver",
+        "train",
+        "bicycle",
+        "aircraft",
+        "bed",
+        "cup",
+        "plant",
+        "rock",
+        "bear",
+        "eagle",
+        "wolf",
+        "sheep",
+        "child",
+        "pilot",
+        "plane",
+        "ship",
+        "desk",
+        "bottle",
+        "corn",
+        "stone"
+      ],
+      "test_nouns": [
+        "dog",
+        "elephant",
+        "chicken",
+        "woman",
+        "doctor",
+        "engineer",
+        "car",
+        "boat",
+        "phone",
+        "chair",
+        "oak",
+        "apple"
+      ],
+      "train_pairs": 576,
+      "test_pairs": 144,
+      "test_positive_rate": 0.3472222222222222,
+      "metrics": {
+        "majority": {
+          "accuracy": 0.6527777777777778,
+          "balanced_accuracy": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "confusion_matrix": {
+            "tn": 94,
+            "fp": 0,
+            "fn": 50,
+            "tp": 0
+          }
+        },
+        "embedding_mlp": {
+          "accuracy": 0.7916666666666666,
+          "balanced_accuracy": 0.7561702127659575,
+          "precision": 0.7272727272727273,
+          "recall": 0.64,
+          "f1": 0.6808510638297872,
+          "confusion_matrix": {
+            "tn": 82,
+            "fp": 12,
+            "fn": 18,
+            "tp": 32
+          }
+        },
+        "shuffled_knowledge_mlp": {
+          "accuracy": 0.7222222222222222,
+          "balanced_accuracy": 0.7170212765957447,
+          "precision": 0.5833333333333334,
+          "recall": 0.7,
+          "f1": 0.6363636363636365,
+          "confusion_matrix": {
+            "tn": 69,
+            "fp": 25,
+            "fn": 15,
+            "tp": 35
+          }
+        },
+        "knowledge_rule": {
+          "accuracy": 0.7777777777777778,
+          "balanced_accuracy": 0.8157446808510638,
+          "precision": 0.618421052631579,
+          "recall": 0.94,
+          "f1": 0.746031746031746,
+          "confusion_matrix": {
+            "tn": 65,
+            "fp": 29,
+            "fn": 3,
+            "tp": 47
+          }
+        },
+        "knowledge_mlp": {
+          "accuracy": 0.9513888888888888,
+          "balanced_accuracy": 0.9393617021276596,
+          "precision": 0.9574468085106383,
+          "recall": 0.9,
+          "f1": 0.9278350515463918,
+          "confusion_matrix": {
+            "tn": 92,
+            "fp": 2,
+            "fn": 5,
+            "tp": 45
+          }
+        }
+      }
+    },
+    {
+      "name": "fold_3",
+      "train_nouns": [
+        "cat",
+        "tiger",
+        "duck",
+        "man",
+        "student",
+        "writer",
+        "robot",
+        "helicopter",
+        "computer",
+        "book",
+        "tree",
+        "wheat",
+        "dog",
+        "elephant",
+        "chicken",
+        "woman",
+        "doctor",
+        "engineer",
+        "car",
+        "boat",
+        "phone",
+        "chair",
+        "oak",
+        "apple",
+        "lion",
+        "seal",
+        "fox",
+        "adult",
+        "driver",
+        "train",
+        "bicycle",
+        "aircraft",
+        "bed",
+        "cup",
+        "plant",
+        "rock",
+        "bear",
+        "eagle",
+        "wolf",
+        "sheep",
+        "child",
+        "pilot",
+        "plane",
+        "ship",
+        "desk",
+        "bottle",
+        "corn",
+        "stone"
+      ],
+      "test_nouns": [
+        "horse",
+        "fish",
+        "bat",
+        "teacher",
+        "farmer",
+        "truck",
+        "bus",
+        "jet",
+        "table",
+        "ball",
+        "rose",
+        "bread"
+      ],
+      "train_pairs": 576,
+      "test_pairs": 144,
+      "test_positive_rate": 0.2569444444444444,
+      "metrics": {
+        "majority": {
+          "accuracy": 0.7430555555555556,
+          "balanced_accuracy": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "confusion_matrix": {
+            "tn": 107,
+            "fp": 0,
+            "fn": 37,
+            "tp": 0
+          }
+        },
+        "embedding_mlp": {
+          "accuracy": 0.8402777777777778,
+          "balanced_accuracy": 0.7068704218236929,
+          "precision": 0.8888888888888888,
+          "recall": 0.43243243243243246,
+          "f1": 0.5818181818181818,
+          "confusion_matrix": {
+            "tn": 105,
+            "fp": 2,
+            "fn": 21,
+            "tp": 16
+          }
+        },
+        "shuffled_knowledge_mlp": {
+          "accuracy": 0.8194444444444444,
+          "balanced_accuracy": 0.7812578934074261,
+          "precision": 0.6341463414634146,
+          "recall": 0.7027027027027027,
+          "f1": 0.6666666666666667,
+          "confusion_matrix": {
+            "tn": 92,
+            "fp": 15,
+            "fn": 11,
+            "tp": 26
+          }
+        },
+        "knowledge_rule": {
+          "accuracy": 0.7986111111111112,
+          "balanced_accuracy": 0.8644859813084111,
+          "precision": 0.5606060606060606,
+          "recall": 1.0,
+          "f1": 0.7184466019417475,
+          "confusion_matrix": {
+            "tn": 78,
+            "fp": 29,
+            "fn": 0,
+            "tp": 37
+          }
+        },
+        "knowledge_mlp": {
+          "accuracy": 0.9791666666666666,
+          "balanced_accuracy": 0.9771406920939631,
+          "precision": 0.9473684210526315,
+          "recall": 0.972972972972973,
+          "f1": 0.9599999999999999,
+          "confusion_matrix": {
+            "tn": 105,
+            "fp": 2,
+            "fn": 1,
+            "tp": 36
+          }
+        }
+      }
+    },
+    {
+      "name": "fold_4",
+      "train_nouns": [
+        "cat",
+        "tiger",
+        "duck",
+        "man",
+        "student",
+        "writer",
+        "robot",
+        "helicopter",
+        "computer",
+        "book",
+        "tree",
+        "wheat",
+        "dog",
+        "elephant",
+        "chicken",
+        "woman",
+        "doctor",
+        "engineer",
+        "car",
+        "boat",
+        "phone",
+        "chair",
+        "oak",
+        "apple",
+        "horse",
+        "fish",
+        "bat",
+        "teacher",
+        "farmer",
+        "truck",
+        "bus",
+        "jet",
+        "table",
+        "ball",
+        "rose",
+        "bread",
+        "bear",
+        "eagle",
+        "wolf",
+        "sheep",
+        "child",
+        "pilot",
+        "plane",
+        "ship",
+        "desk",
+        "bottle",
+        "corn",
+        "stone"
+      ],
+      "test_nouns": [
+        "lion",
+        "seal",
+        "fox",
+        "adult",
+        "driver",
+        "train",
+        "bicycle",
+        "aircraft",
+        "bed",
+        "cup",
+        "plant",
+        "rock"
+      ],
+      "train_pairs": 576,
+      "test_pairs": 144,
+      "test_positive_rate": 0.2638888888888889,
+      "metrics": {
+        "majority": {
+          "accuracy": 0.7361111111111112,
+          "balanced_accuracy": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "confusion_matrix": {
+            "tn": 106,
+            "fp": 0,
+            "fn": 38,
+            "tp": 0
+          }
+        },
+        "embedding_mlp": {
+          "accuracy": 0.7569444444444444,
+          "balanced_accuracy": 0.6829692154915591,
+          "precision": 0.5405405405405406,
+          "recall": 0.5263157894736842,
+          "f1": 0.5333333333333333,
+          "confusion_matrix": {
+            "tn": 89,
+            "fp": 17,
+            "fn": 18,
+            "tp": 20
+          }
+        },
+        "shuffled_knowledge_mlp": {
+          "accuracy": 0.625,
+          "balanced_accuracy": 0.5427010923535253,
+          "precision": 0.3181818181818182,
+          "recall": 0.3684210526315789,
+          "f1": 0.3414634146341463,
+          "confusion_matrix": {
+            "tn": 76,
+            "fp": 30,
+            "fn": 24,
+            "tp": 14
+          }
+        },
+        "knowledge_rule": {
+          "accuracy": 0.8055555555555556,
+          "balanced_accuracy": 0.8679245283018868,
+          "precision": 0.5757575757575758,
+          "recall": 1.0,
+          "f1": 0.7307692307692308,
+          "confusion_matrix": {
+            "tn": 78,
+            "fp": 28,
+            "fn": 0,
+            "tp": 38
+          }
+        },
+        "knowledge_mlp": {
+          "accuracy": 0.9930555555555556,
+          "balanced_accuracy": 0.986842105263158,
+          "precision": 1.0,
+          "recall": 0.9736842105263158,
+          "f1": 0.9866666666666666,
+          "confusion_matrix": {
+            "tn": 106,
+            "fp": 0,
+            "fn": 1,
+            "tp": 37
+          }
+        }
+      }
+    },
+    {
+      "name": "fold_5",
+      "train_nouns": [
+        "cat",
+        "tiger",
+        "duck",
+        "man",
+        "student",
+        "writer",
+        "robot",
+        "helicopter",
+        "computer",
+        "book",
+        "tree",
+        "wheat",
+        "dog",
+        "elephant",
+        "chicken",
+        "woman",
+        "doctor",
+        "engineer",
+        "car",
+        "boat",
+        "phone",
+        "chair",
+        "oak",
+        "apple",
+        "horse",
+        "fish",
+        "bat",
+        "teacher",
+        "farmer",
+        "truck",
+        "bus",
+        "jet",
+        "table",
+        "ball",
+        "rose",
+        "bread",
+        "lion",
+        "seal",
+        "fox",
+        "adult",
+        "driver",
+        "train",
+        "bicycle",
+        "aircraft",
+        "bed",
+        "cup",
+        "plant",
+        "rock"
+      ],
+      "test_nouns": [
+        "bear",
+        "eagle",
+        "wolf",
+        "sheep",
+        "child",
+        "pilot",
+        "plane",
+        "ship",
+        "desk",
+        "bottle",
+        "corn",
+        "stone"
+      ],
+      "train_pairs": 576,
+      "test_pairs": 144,
+      "test_positive_rate": 0.3125,
+      "metrics": {
+        "majority": {
+          "accuracy": 0.6875,
+          "balanced_accuracy": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "confusion_matrix": {
+            "tn": 99,
+            "fp": 0,
+            "fn": 45,
+            "tp": 0
+          }
+        },
+        "embedding_mlp": {
+          "accuracy": 0.8125,
+          "balanced_accuracy": 0.7969696969696969,
+          "precision": 0.68,
+          "recall": 0.7555555555555555,
+          "f1": 0.7157894736842104,
+          "confusion_matrix": {
+            "tn": 83,
+            "fp": 16,
+            "fn": 11,
+            "tp": 34
+          }
+        },
+        "shuffled_knowledge_mlp": {
+          "accuracy": 0.7430555555555556,
+          "balanced_accuracy": 0.6979797979797979,
+          "precision": 0.5909090909090909,
+          "recall": 0.5777777777777777,
+          "f1": 0.5842696629213482,
+          "confusion_matrix": {
+            "tn": 81,
+            "fp": 18,
+            "fn": 19,
+            "tp": 26
+          }
+        },
+        "knowledge_rule": {
+          "accuracy": 0.7916666666666666,
+          "balanced_accuracy": 0.8484848484848485,
+          "precision": 0.6,
+          "recall": 1.0,
+          "f1": 0.7499999999999999,
+          "confusion_matrix": {
+            "tn": 69,
+            "fp": 30,
+            "fn": 0,
+            "tp": 45
+          }
+        },
+        "knowledge_mlp": {
+          "accuracy": 0.9930555555555556,
+          "balanced_accuracy": 0.994949494949495,
+          "precision": 0.9782608695652174,
+          "recall": 1.0,
+          "f1": 0.989010989010989,
+          "confusion_matrix": {
+            "tn": 98,
+            "fp": 1,
+            "fn": 0,
+            "tp": 45
+          }
+        }
+      }
+    }
+  ],
+  "summary": {
+    "majority": {
+      "pooled": {
+        "accuracy": 0.6833333333333333,
+        "balanced_accuracy": 0.5,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "confusion_matrix": {
+          "tn": 492,
+          "fp": 0,
+          "fn": 228,
+          "tp": 0
+        }
+      },
+      "fold_mean_std": {
+        "accuracy": {
+          "mean": 0.6833333333333333,
+          "std": 0.06065963278311796
+        },
+        "balanced_accuracy": {
+          "mean": 0.5,
+          "std": 0.0
+        },
+        "precision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "recall": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.0,
+          "std": 0.0
+        }
+      }
+    },
+    "embedding_mlp": {
+      "pooled": {
+        "accuracy": 0.7986111111111112,
+        "balanced_accuracy": 0.7490907145913565,
+        "precision": 0.7106598984771574,
+        "recall": 0.6140350877192983,
+        "f1": 0.6588235294117647,
+        "confusion_matrix": {
+          "tn": 435,
+          "fp": 57,
+          "fn": 88,
+          "tp": 140
+        }
+      },
+      "fold_mean_std": {
+        "accuracy": {
+          "mean": 0.798611111111111,
+          "std": 0.03066583634141615
+        },
+        "balanced_accuracy": {
+          "mean": 0.7424852438127474,
+          "std": 0.046619003083750436
+        },
+        "precision": {
+          "mean": 0.7256737646737647,
+          "std": 0.12976632847625869
+        },
+        "recall": {
+          "mean": 0.601895238250955,
+          "std": 0.12483170575740492
+        },
+        "f1": {
+          "mean": 0.6457546369481969,
+          "std": 0.0835707349280661
+        }
+      }
+    },
+    "shuffled_knowledge_mlp": {
+      "pooled": {
+        "accuracy": 0.7319444444444444,
+        "balanced_accuracy": 0.6944266153187848,
+        "precision": 0.574468085106383,
+        "recall": 0.5921052631578947,
+        "f1": 0.5831533477321814,
+        "confusion_matrix": {
+          "tn": 392,
+          "fp": 100,
+          "fn": 93,
+          "tp": 135
+        }
+      },
+      "fold_mean_std": {
+        "accuracy": {
+          "mean": 0.7319444444444445,
+          "std": 0.0700666569757191
+        },
+        "balanced_accuracy": {
+          "mean": 0.6924592133503782,
+          "std": 0.08930264349374262
+        },
+        "precision": {
+          "mean": 0.5731402037340532,
+          "std": 0.1554814436275883
+        },
+        "recall": {
+          "mean": 0.5870216859327566,
+          "std": 0.1360317496853164
+        },
+        "f1": {
+          "mean": 0.5765219068863903,
+          "std": 0.13509133204432625
+        }
+      }
+    },
+    "knowledge_rule": {
+      "pooled": {
+        "accuracy": 0.7847222222222222,
+        "balanced_accuracy": 0.8318891741548995,
+        "precision": 0.6,
+        "recall": 0.9605263157894737,
+        "f1": 0.7386172006745363,
+        "confusion_matrix": {
+          "tn": 346,
+          "fp": 146,
+          "fn": 9,
+          "tp": 219
+        }
+      },
+      "fold_mean_std": {
+        "accuracy": {
+          "mean": 0.7847222222222222,
+          "std": 0.021960261528947086
+        },
+        "balanced_accuracy": {
+          "mean": 0.8340994592728027,
+          "std": 0.03949821582766289
+        },
+        "precision": {
+          "mean": 0.597786206091726,
+          "std": 0.030084800947376266
+        },
+        "recall": {
+          "mean": 0.9673103448275862,
+          "std": 0.04732461833543436
+        },
+        "f1": {
+          "mean": 0.7376209443199734,
+          "std": 0.012903504991895317
+        }
+      }
+    },
+    "knowledge_mlp": {
+      "pooled": {
+        "accuracy": 0.9736111111111111,
+        "balanced_accuracy": 0.9653936670945658,
+        "precision": 0.9728506787330317,
+        "recall": 0.9429824561403509,
+        "f1": 0.957683741648107,
+        "confusion_matrix": {
+          "tn": 486,
+          "fp": 6,
+          "fn": 13,
+          "tp": 215
+        }
+      },
+      "fold_mean_std": {
+        "accuracy": {
+          "mean": 0.9736111111111111,
+          "std": 0.021063542900143232
+        },
+        "balanced_accuracy": {
+          "mean": 0.9681511806029739,
+          "std": 0.0256762750473794
+        },
+        "precision": {
+          "mean": 0.9728416349200371,
+          "std": 0.020745852642195747
+        },
+        "recall": {
+          "mean": 0.9486417815274439,
+          "std": 0.04726572151412601
+        },
+        "f1": {
+          "mean": 0.9600899288321969,
+          "std": 0.027924885610359402
+        }
+      }
+    },
+    "pooled_balanced_accuracy_differences": {
+      "knowledge_minus_embedding": 0.2163029525032093,
+      "knowledge_minus_shuffled": 0.27096705177578095,
+      "knowledge_minus_rule": 0.13350449293966626
+    }
+  }
+}

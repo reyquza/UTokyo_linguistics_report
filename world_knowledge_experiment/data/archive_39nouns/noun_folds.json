@@ -1,0 +1,26 @@
+{
+  "archive_note": "60名詞版へ拡張する前の39名詞版である。",
+  "note": "すべての名詞を一度ずつテスト側に置く5分割である。文ではなく名詞を単位として分割する。",
+  "folds": [
+    {
+      "name": "fold_1",
+      "test_nouns": ["cat", "fish", "man", "car", "boat", "oak", "child", "ship"]
+    },
+    {
+      "name": "fold_2",
+      "test_nouns": ["dog", "seal", "woman", "truck", "computer", "rock", "student", "helicopter"]
+    },
+    {
+      "name": "fold_3",
+      "test_nouns": ["horse", "eagle", "teacher", "train", "phone", "tiger", "bus", "table"]
+    },
+    {
+      "name": "fold_4",
+      "test_nouns": ["lion", "duck", "adult", "plane", "book", "elephant", "bicycle", "stone"]
+    },
+    {
+      "name": "fold_5",
+      "test_nouns": ["bear", "bat", "robot", "chair", "tree", "chicken", "rose"]
+    }
+  ]
+}
