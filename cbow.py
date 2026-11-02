@@ -1,7 +1,7 @@
 """
-深層学習では「縦はデータ」「横は特徴量」
-axis=0は「何個あるか」
-axis=1以降は「そのデータの中身」
+In deep learning, rows represent samples and columns represent features.
+axis=0 is the sample dimension.
+axis=1 and higher describe the contents of each sample.
 B : batch_size
 V : vocab_size
 H : hidden_size
@@ -20,7 +20,7 @@ from common.np import np
 from common.layers import Embedding, NegativeSamplingLoss
 
 class CBOW:
-    
+
     def __init__(self, vocab_size, hidden_size, window_size, corpus):
         
         V, H = vocab_size, hidden_size
@@ -45,7 +45,7 @@ class CBOW:
         h = 0
         for i, layer in enumerate(self.in_layers):
             # if window_size=2, then the contexts = [[3, 1, 5, 8]
-            # 縦はバッチサイズ、横が入力する単語数      [2, 3, 4, 1]]
+            # Rows are samples; columns are context words.      [2, 3, 4, 1]]
             h += layer.forward(contexts[:, i])
             # layer.forward(...) : (B, H)
             # h                  : (B, H)
@@ -60,5 +60,3 @@ class CBOW:
         for layer in self.in_layers:
             layer.backward(dout)
         return None
-
-    

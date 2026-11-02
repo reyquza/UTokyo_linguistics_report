@@ -1,7 +1,7 @@
-# 旧39名詞版データ
+# Archived 39-noun dataset
 
-このフォルダは、60名詞・12動詞へ拡張する前のデータを比較用に残したものである。
+This folder preserves the dataset used before the expansion to 60 nouns and 12 verbs.
 
-旧版では39名詞・8動詞・312組を用い、Knowledge ruleのpooled balanced accuracyは0.941、CBOW + knowledgeは0.978であった。動詞要求と正解の対応が強すぎたため、現在の実験では語彙と動詞を先に増やし、動詞要求を「粗い典型的要件1個」に統一した。
+The earlier version contained 39 nouns, 8 verbs, and 312 pairs. Pooled balanced accuracy was 0.941 for Knowledge rule and 0.978 for CBOW + knowledge. The verb conditions aligned too closely with the labels, motivating an expanded vocabulary and a revised design with one coarse condition per verb. Results from the two datasets are not directly comparable.
 
-通常の実行コードはこのフォルダを読み込まず、一つ上の`data/`にある60名詞版を使用する。
+The current experiment does not read this folder. It uses the 60-noun dataset in the parent `data/` directory.

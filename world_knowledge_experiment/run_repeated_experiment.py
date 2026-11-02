@@ -1,4 +1,4 @@
-"""5-fold名詞評価を複数の乱数seedで反復し、平均と標準偏差を求める。"""
+"""Repeat five-fold noun evaluation across seeds and report mean and standard deviation."""
 
 from __future__ import annotations
 
@@ -81,7 +81,7 @@ def combine_prediction_csvs(
                 combined_rows.append({"seed": seed, **row})
 
     if fieldnames is None:
-        raise ValueError("予測CSVが1件もありません。")
+        raise ValueError("No prediction CSV files were provided.")
 
     with output_path.open("w", encoding="utf-8-sig", newline="") as file:
         writer = csv.DictWriter(file, fieldnames=fieldnames)
@@ -122,7 +122,7 @@ def run_one_seed(
     seed: int,
     config: dict[str, Any],
 ) -> tuple[dict[str, Any], Path]:
-    """1 seed分を独立に実行する。プロセス並列化からも呼べる形にしておく。"""
+    """Run one seed independently; callable by a worker process."""
     run_directory = config["seed_runs_dir"] / f"seed_{seed}"
     single_args = SimpleNamespace(
         embeddings=config["embeddings"],
@@ -159,11 +159,11 @@ def run_one_seed(
 
 def main(args: argparse.Namespace) -> dict[str, Any]:
     if not args.seeds:
-        raise ValueError("--seedsには1個以上の整数が必要です。")
+        raise ValueError("--seeds requires at least one integer.")
     if len(args.seeds) != len(set(args.seeds)):
-        raise ValueError("--seedsに重複があります。")
+        raise ValueError("--seeds contains duplicates.")
     if args.jobs < 1:
-        raise ValueError("--jobsには1以上の整数が必要です。")
+        raise ValueError("--jobs must be an integer greater than or equal to 1.")
 
     started_at = time.perf_counter()
     args.output_dir.mkdir(parents=True, exist_ok=True)
@@ -259,7 +259,7 @@ def parse_args() -> argparse.Namespace:
         type=int,
         nargs="+",
         default=list(range(5)),
-        help="反復に使うseed（既定: 0 1 2 3 4）",
+        help="Seeds to evaluate (default: 0 1 2 3 4)",
     )
     parser.add_argument("--shuffle-seed", type=int, default=20_260_730)
     parser.add_argument("--hidden-size", type=int, default=32)
@@ -271,7 +271,7 @@ def parse_args() -> argparse.Namespace:
         "--jobs",
         type=int,
         default=1,
-        help="同時に実行するseed数（既定: 1。複数指定で並列実行）",
+        help="Number of concurrent seed runs (default: 1; use more for parallel execution)",
     )
     return parser.parse_args()
 

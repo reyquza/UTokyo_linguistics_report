@@ -1,4 +1,4 @@
-"""標準ライブラリunittestだけで行う簡単な検査。"""
+"""Basic experiment checks using the standard-library unittest framework."""
 
 import unittest
 

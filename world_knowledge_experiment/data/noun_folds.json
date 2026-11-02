@@ -1,5 +1,5 @@
 {
-  "note": "5つのfoldが同程度の大きさになり、動物・人間・機械・人工物・植物や自然物が各foldに入るよう、カテゴリごとの語彙リストを順番に配分した。",
+  "note": "Assign words from each category in order across five similarly sized folds, distributing animals, humans, machines, artifacts, and plants or natural objects across folds.",
   "folds": [
     {
       "name": "fold_1",

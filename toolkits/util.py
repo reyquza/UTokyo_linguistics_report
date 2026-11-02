@@ -24,11 +24,11 @@ def preprocess(text):
 
 
 def cos_similarity(x, y, eps=1e-8):
-    '''コサイン類似度の算出
+    '''Compute cosine similarity.
 
-    :param x: ベクトル
-    :param y: ベクトル
-    :param eps: ”0割り”防止のための微小値
+    :param x: Vector
+    :param y: Vector
+    :param eps: Small constant to avoid division by zero
     :return:
     '''
     nx = x / (np.sqrt(np.sum(x ** 2)) + eps)
@@ -37,13 +37,13 @@ def cos_similarity(x, y, eps=1e-8):
 
 
 def most_similar(query, word_to_id, id_to_word, word_matrix, top=5):
-    '''類似単語の検索
+    '''Find similar words.
 
-    :param query: クエリ（テキスト）
-    :param word_to_id: 単語から単語IDへのディクショナリ
-    :param id_to_word: 単語IDから単語へのディクショナリ
-    :param word_matrix: 単語ベクトルをまとめた行列。各行に対応する単語のベクトルが格納されていることを想定する
-    :param top: 上位何位まで表示するか
+    :param query: Query word (text)
+    :param word_to_id: Dictionary mapping words to IDs
+    :param id_to_word: Dictionary mapping IDs to words
+    :param word_matrix: Matrix with one word vector per row
+    :param top: Number of nearest neighbors to display
     '''
     if query not in word_to_id:
         print('%s is not found' % query)
@@ -71,11 +71,11 @@ def most_similar(query, word_to_id, id_to_word, word_matrix, top=5):
 
 
 def convert_one_hot(corpus, vocab_size):
-    '''one-hot表現への変換
+    '''Convert to one-hot representations.
 
-    :param corpus: 単語IDのリスト（1次元もしくは2次元のNumPy配列）
-    :param vocab_size: 語彙数
-    :return: one-hot表現（2次元もしくは3次元のNumPy配列）
+    :param corpus: Word IDs (a 1D or 2D NumPy array)
+    :param vocab_size: Vocabulary size
+    :return: One-hot representations (a 2D or 3D NumPy array)
     '''
     N = corpus.shape[0]
 
@@ -95,12 +95,12 @@ def convert_one_hot(corpus, vocab_size):
 
 
 def create_co_matrix(corpus, vocab_size, window_size=1):
-    '''共起行列の作成
+    '''Build a co-occurrence matrix.
 
-    :param corpus: コーパス（単語IDのリスト）
-    :param vocab_size:語彙数
-    :param window_size:ウィンドウサイズ（ウィンドウサイズが1のときは、単語の左右1単語がコンテキスト）
-    :return: 共起行列
+    :param corpus: Corpus (list of word IDs)
+    :param vocab_size:Vocabulary size
+    :param window_size:Context window size (1 means one word on each side)
+    :return: Co-occurrence matrix
     '''
     corpus_size = len(corpus)
     co_matrix = np.zeros((vocab_size, vocab_size), dtype=np.int32)
@@ -122,10 +122,10 @@ def create_co_matrix(corpus, vocab_size, window_size=1):
 
 
 def ppmi(C, verbose=False, eps = 1e-8):
-    '''PPMI（正の相互情報量）の作成
+    '''Compute positive pointwise mutual information (PPMI).
 
-    :param C: 共起行列
-    :param verbose: 進行状況を出力するかどうか
+    :param C: Co-occurrence matrix
+    :param verbose: Whether to print progress
     :return:
     '''
     M = np.zeros_like(C, dtype=np.float32)
@@ -147,10 +147,10 @@ def ppmi(C, verbose=False, eps = 1e-8):
 
 
 def create_contexts_target(corpus, window_size=1):
-    '''コンテキストとターゲットの作成
+    '''Create contexts and targets.
 
-    :param corpus: コーパス（単語IDのリスト）
-    :param window_size: ウィンドウサイズ（ウィンドウサイズが1のときは、単語の左右1単語がコンテキスト）
+    :param corpus: Corpus (list of word IDs)
+    :param window_size: Context window size (1 means one word on each side)
     :return:
     '''
     target = corpus[window_size:-window_size]
@@ -227,12 +227,12 @@ def eval_perplexity(model, corpus, batch_size=10, time_size=35):
 def eval_seq2seq(model, question, correct, id_to_char,
                  verbose=False, is_reverse=False):
     correct = correct.flatten()
-    # 頭の区切り文字
+    # Leading delimiter
     start_id = correct[0]
     correct = correct[1:]
     guess = model.generate(question, start_id, len(correct))
 
-    # 文字列へ変換
+    # Convert to a string
     question = ''.join([id_to_char[int(c)] for c in question.flatten()])
     correct = ''.join([id_to_char[int(c)] for c in correct])
     guess = ''.join([id_to_char[int(c)] for c in guess])

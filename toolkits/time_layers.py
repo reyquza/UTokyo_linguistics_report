@@ -98,9 +98,9 @@ class LSTM:
 
         Parameters
         ----------
-        Wx: 入力`x`用の重みパラーメタ（4つ分の重みをまとめる）
-        Wh: 隠れ状態`h`用の重みパラメータ（4つ分の重みをまとめる）
-        b: バイアス（4つ分のバイアスをまとめる）
+        Wx: Input weights for x (four weight matrices combined)
+        Wh: Hidden-state weights for h (four weight matrices combined)
+        b: Biases (four bias vectors combined)
         '''
         self.params = [Wx, Wh, b]
         self.grads = [np.zeros_like(Wx), np.zeros_like(Wh), np.zeros_like(b)]
@@ -301,19 +301,19 @@ class TimeSoftmaxWithLoss:
     def forward(self, xs, ts):
         N, T, V = xs.shape
 
-        if ts.ndim == 3:  # 教師ラベルがone-hotベクトルの場合
+        if ts.ndim == 3:  # If labels are one-hot vectors
             ts = ts.argmax(axis=2)
 
         mask = (ts != self.ignore_label)
 
-        # バッチ分と時系列分をまとめる（reshape）
+        # Flatten the batch and time dimensions
         xs = xs.reshape(N * T, V)
         ts = ts.reshape(N * T)
         mask = mask.reshape(N * T)
 
         ys = softmax(xs)
         ls = np.log(ys[np.arange(N * T), ts])
-        ls *= mask  # ignore_labelに該当するデータは損失を0にする
+        ls *= mask  # Zero the loss for ignored labels
         loss = -np.sum(ls)
         loss /= mask.sum()
 
@@ -327,7 +327,7 @@ class TimeSoftmaxWithLoss:
         dx[np.arange(N * T), ts] -= 1
         dx *= dout
         dx /= mask.sum()
-        dx *= mask[:, np.newaxis]  # ignore_labelに該当するデータは勾配を0にする
+        dx *= mask[:, np.newaxis]  # Zero the gradient for ignored labels
 
         dx = dx.reshape((N, T, V))
 
@@ -384,15 +384,15 @@ class TimeBiLSTM:
         return dxs
 
 # ====================================================================== #
-# 以下に示すレイヤは、本書で説明をおこなっていないレイヤの実装もしくは
-# 処理速度よりも分かりやすさを優先したレイヤの実装です。
+# The layers below either implement topics not covered in the book or
+# prioritize readability over execution speed.
 #
-# TimeSigmoidWithLoss: 時系列データのためのシグモイド損失レイヤ
-# GRU: GRUレイヤ
-# TimeGRU: 時系列データのためのGRUレイヤ
-# BiTimeLSTM: 双方向LSTMレイヤ
-# Simple_TimeSoftmaxWithLoss：単純なTimeSoftmaxWithLossレイヤの実装
-# Simple_TimeAffine: 単純なTimeAffineレイヤの実装
+# TimeSigmoidWithLoss: Sigmoid loss layer for sequence data
+# GRU: GRU layer
+# TimeGRU: GRU layer for sequence data
+# BiTimeLSTM: Bidirectional LSTM layer
+# Simple_TimeSoftmaxWithLoss: Simple TimeSoftmaxWithLoss implementation
+# Simple_TimeAffine: Simple TimeAffine implementation
 # ====================================================================== #
 
 
@@ -434,9 +434,9 @@ class GRU:
 
         Parameters
         ----------
-        Wx: 入力`x`用の重みパラーメタ（3つ分の重みをまとめる）
-        Wh: 隠れ状態`h`用の重みパラメータ（3つ分の重みをまとめる）
-        b: バイアス（3つ分のバイアスをまとめる）
+        Wx: Input weights for x (three weight matrices combined)
+        Wh: Hidden-state weights for h (three weight matrices combined)
+        b: Biases (three bias vectors combined)
         '''
         self.params = [Wx, Wh, b]
         self.grads = [np.zeros_like(Wx), np.zeros_like(Wh), np.zeros_like(b)]

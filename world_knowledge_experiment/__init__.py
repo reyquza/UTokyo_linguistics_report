@@ -1,2 +1,2 @@
-"""言語構造論レポート用の世界知識ミニ実験。"""
+"""A small world-knowledge experiment for a linguistics course report."""
 

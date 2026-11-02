@@ -1,7 +1,7 @@
-"""この実験で使う小さなMLP。
+"""A small MLP for the plausibility experiment.
 
-層と最適化アルゴリズムは、リポジトリ直下にある自作版
-『ゼロから作るDeep Learning 2』コードを再利用する。
+Reuses layers and optimization code from the book-based implementations
+at the repository root (Deep Learning from Scratch 2).
 """
 
 import numpy as np
@@ -10,10 +10,10 @@ from common.layers import Affine, Sigmoid, Softmax_with_Loss
 
 
 class TwoLayerMLP:
-    """Affine -> Sigmoid -> Affine の2層分類器。"""
+    """A two-layer classifier: Affine -> Sigmoid -> Affine."""
 
     def __init__(self, input_size: int, hidden_size: int, output_size: int = 2):
-        # Sigmoidに合わせたXavier風の初期化
+        # Xavier-style initialization for sigmoid activations
         w1 = (
             np.random.randn(input_size, hidden_size)
             * np.sqrt(1.0 / input_size)
