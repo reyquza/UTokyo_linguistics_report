@@ -4,9 +4,9 @@ import numpy as np
 
 def load_data(seed=1984):
     np.random.seed(seed)
-    N = 100  # クラスごとのサンプル数
-    DIM = 2  # データの要素数
-    CLS_NUM = 3  # クラス数
+    N = 100  # Samples per class
+    DIM = 2  # Number of features
+    CLS_NUM = 3  # Number of classes
 
     x = np.zeros((N*CLS_NUM, DIM))
     t = np.zeros((N*CLS_NUM, CLS_NUM), dtype=np.int32)

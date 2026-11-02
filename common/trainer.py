@@ -25,7 +25,7 @@ class Trainer:
 
         start_time = time.time()
         for epoch in range(max_epoch):
-            # シャッフル
+            # Shuffle
             idx = numpy.random.permutation(numpy.arange(data_size))
             x = x[idx]
             t = t[idx]
@@ -34,17 +34,17 @@ class Trainer:
                 batch_x = x[iters*batch_size:(iters+1)*batch_size]
                 batch_t = t[iters*batch_size:(iters+1)*batch_size]
 
-                # 勾配を求め、パラメータを更新
+                # Compute gradients and update parameters
                 loss = model.forward(batch_x, batch_t)
                 model.backward()
-                params, grads = remove_duplicate(model.params, model.grads)  # 共有された重みを1つに集約
+                params, grads = remove_duplicate(model.params, model.grads)  # Merge shared weights
                 if max_grad is not None:
                     clip_grads(grads, max_grad)
                 optimizer.update(params, grads)
                 total_loss += loss
                 loss_count += 1
 
-                # 評価
+                # Evaluate
                 if (eval_interval is not None) and (iters % eval_interval) == 0:
                     avg_loss = total_loss / loss_count
                     elapsed_time = time.time() - start_time
@@ -67,8 +67,8 @@ class Trainer:
         
 def remove_duplicate(params, grads):
     '''
-    パラメータ配列中の重複する重みをひとつに集約し、
-    その重みに対応する勾配を加算する
+    Merge duplicate weights in the parameter arrays and
+    sum their corresponding gradients.
     '''
     params, grads = params[:], grads[:]  # copy list
 
@@ -78,13 +78,13 @@ def remove_duplicate(params, grads):
 
         for i in range(0, L - 1):
             for j in range(i + 1, L):
-                # 重みを共有する場合
+                # Shared weights
                 if params[i] is params[j]:
-                    grads[i] += grads[j]  # 勾配の加算
+                    grads[i] += grads[j]  # Accumulate gradients
                     find_flg = True
                     params.pop(j)
                     grads.pop(j)
-                # 転置行列として重みを共有する場合（weight tying）
+                # Weights shared through transposition (weight tying)
                 elif params[i].ndim == 2 and params[j].ndim == 2 and \
                      params[i].T.shape == params[j].shape and np.all(params[i].T == params[j]):
                     grads[i] += grads[j].T

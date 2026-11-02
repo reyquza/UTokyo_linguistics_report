@@ -1,59 +1,70 @@
-### 世界知識を用いた文のもっともらしさ判定
+### Plausibility Judgments with World Knowledge
 
-#### Abstract
+#### Overview
 
-本プロジェクトでは、CBOWで学習した単語ベクトルに簡単な世界知識を加えることで、文の現実的なもっともらしさをより正確に判定できるかを調べた。
-
-対象は、通常の状況で字義通りに解釈した主語・動詞の組である。
+This experiment asks whether adding simple facts about the world to CBOW word vectors improves judgments about what a subject can realistically do.
 
 ```text
-An eagle can fly.  → 可能
-A cat can fly.     → 不可能
+An eagle can fly.  -> possible
+A cat can fly.    -> impossible
 ```
 
-教師あり学習で未学習の名詞をテストする条件で、CBOWだけのモデルと世界知識を加えたモデルを比較した。その結果、balanced accuracyは次のように向上した。
+The classifier is tested on nouns excluded from its supervised training examples. On this synthetic dataset, adding knowledge improved balanced accuracy from **0.744 ± 0.007** to **0.963 ± 0.003** across five random seeds.
+
+#### Data and inputs
+
+CBOW was trained on the Penn Treebank (PTB) dataset used in *Deep Learning from Scratch 2*. Its 100-dimensional word vectors remain fixed during classifier training.
+
+OpenAI Codex was used to create the classification dataset, with instructions to avoid overly obscure words. It contains all combinations of 60 nouns and 12 verbs: **720 examples** in the form `A/An noun can verb`. The classifier receives vectors representing the noun and verb, rather than processing the full sentence.
+
+The verbs are `fly`, `walk`, `eat`, `speak`, `float`, `grow`, `sleep`, `think`, `read`, `write`, `cook`, and `hunt`. Labels describe ordinary capabilities in typical situations, excluding metaphors, accidents, and exceptional modifications.
+
+[`data/world_knowledge.json`](data/world_knowledge.json) stores general facts about each noun and one basic condition associated with each verb. For example:
 
 ```text
-CBOW + MLP        0.744 ± 0.007
-CBOW + knowledge  0.963 ± 0.003
+"cat": ["physical", "mobile", "animate", "living", "animal", "has_legs"]
+"fly": {"requires": ["mobile"]}
 ```
 
-この結果は、今回作成した人工データの範囲では、一般属性などの世界知識が未知名詞への汎化に役立ったことを示している。
+There are 19 features, including `animal`, `artifact`, `has_wings`, and `has_legs`. Each noun is represented by 19 values: 1 if the feature applies and 0 otherwise. The verb's condition is encoded in the same way. These are deliberately broad conditions: being mobile alone does not mean something can fly.
 
-#### Method
+[`data/plausibility_labels.json`](data/plausibility_labels.json) separately lists the verbs labeled possible for each noun:
 
-##### data
-1. CBOWモデルの学習には、書籍『ゼロから作るdeep learning2』と同じくPTBデータセットを使った。
-2.。データの生成はOpenAI Codexに作成してもらった。あまりマイナーすぎる単語を選ばないように留意させた。
-世界知識の情報は、`.\data\world_knowledge.json`にまとめてある。
-"cat": ["physical", "mobile", "animate", "living", "animal", "has_legs"]のように、入力文の主語となる、名詞にはこのように属性を付けた。属性は全体で19種類用意した。
-また"fly": {"requires": ["mobile"]}のように、述語となる動詞には、その動作に関係する基本的な条件を一つ設定した。
-そして、今回はその中に登場する、英語の名詞60語と動詞12語を全て組合せ、`A/An noun can verb`という文にして、文判定モデルにEmbeddingした上で入力した。判定文があり得るか、ありえないかという答え(教師ラベル)は`.\data\plausibility_labels.json`に、例えば"cat": ["walk", "eat", "grow", "sleep", "think", "hunt"]のような形でまとめてある。この例ならA cat can sllepという文なら「起こりえる」が正解で、A cat can cookという文なら「起こりえないが正解である。」
-#### 比較したモデル
+```text
+"cat": ["walk", "eat", "grow", "sleep", "think", "hunt"]
+```
 
-| モデル | 内容 |
+For example, `A cat can sleep` is labeled possible and `A cat can cook` is labeled impossible. Verbs absent from a noun's list are labeled impossible.
+
+#### Models
+
+| Model | How it makes a prediction |
 |---|---|
-| Majority | 訓練データで多いラベルだけを予測する基準 |
-| CBOW + MLP | 主語と動詞の100次元CBOWベクトルを連結して分類 |
-| CBOW + shuffled knowledge | 各名詞に付けた特徴を、別の名詞の特徴とランダムに入れ替えてからMLPで分類 (世界知識を加えたときの精度向上が、ベクトルの次元数、つまりパラメータサイズによるものでないか調べるための対照実験)|
-| Knowledge rule | 学習は行わず、動詞に設定した条件を主語がすべて満たせば「可能」、一つでも欠ければ「不可能」と予測 |
-| CBOW + knowledge | CBOWベクトルに加え、主語が持つ特徴、動詞に設定した条件、両者で一致する項目をMLPに入力して分類 |
+| Majority | Always predicts the most common training label. |
+| CBOW + MLP | Concatenates the noun and verb vectors and feeds them into a small neural-network classifier. |
+| CBOW + shuffled knowledge | Uses the same inputs as the knowledge model, but randomly assigns each noun another noun's feature list. This checks whether adding more input dimensions alone explains the improvement. |
+| Knowledge rule | Does not learn. Predicts possible if the noun has every feature listed as a condition for the verb, and impossible otherwise. |
+| CBOW + knowledge | Gives the classifier the word vectors, the noun's features, the verb's conditions, and the features present in both lists. |
 
-Knowledge ruleは、主語が動詞の条件をすべて持っている場合だけ「可能」と予測する。したがって、脚を持つcat–walkは「可能」、脚を持たないtable–walkは「不可能」となる。ただし、この条件だけで正解が決まるようにはしていない。例えば、`speak`の条件は`animate`であるため、Knowledge ruleはanimateであるcat–speakも「可能」と予測してしまう。ここで、CBOW + knowledgeでは、このような単純規則の誤りを、CBOWベクトルと世界知識を使ってミスなく判別できるかを調べた。
+For example, `walk` has the condition `has_legs`. The rule therefore predicts cat–walk as possible. It also predicts cat–speak as possible because the condition for `speak` is `animate`, which the cat has. This is an error under the dataset's labels. The learned model can use the additional inputs and training examples to go beyond this simple rule.
 
-MLPは隠れ層32ユニットの2層構成で、100 epoch学習した。
+The baseline input has 200 values: 100 for the noun and 100 for the verb. The knowledge model has 257 values: the same 200 plus three 19-value feature vectors. The third vector is the elementwise product of the noun and verb feature vectors, so an entry is 1 only when both vectors contain 1 at that position.
 
-実装にはNumPyと、『ゼロから作るDeep Learning 2』を参考に作成した既存コードの `Affine`、`Sigmoid`、`Softmax_with_Loss`、`Adam` を使用した。CBOWベクトルは事前学習済みのものを固定し、分類用MLPだけを学習した。
+Both classifiers use a two-layer MLP with 32 hidden units and a sigmoid activation, trained for 100 epochs. The implementation uses NumPy and the book-based `Affine`, `Sigmoid`, `Softmax_with_Loss`, and `Adam` implementations in this repository. It does not use PyTorch or Transformers.
 
-#### 乱数seedと集計方法
+#### Evaluation
 
-重みの初期値とミニバッチ順による偶然を確認するため、seedを0から4まで変えて実験全体を5回行った。各seedについて、5 foldの予測をまとめた720組全体の指標を計算した。表中の「±」は、この5個の値の標本標準偏差である。foldを独立した25回の実験として数えているわけではない。
+Nouns are divided into five fixed groups of 12. Each fold trains on **48 nouns × 12 verbs = 576 examples** and tests on **12 different nouns × 12 verbs = 144 examples**. Every noun is tested once per seed. This avoids placing different sentences about the same noun in both the training and test sets of a fold.
 
-### 結果
+The test nouns are unseen only during classifier training: their pretrained CBOW vectors and supplied knowledge features are available.
 
-5 seedsの平均 ± 標本標準偏差を示す。
+The entire five-fold experiment is repeated with seeds 0–4. For each seed, predictions from all five folds are pooled into one score over 720 examples. The reported mean and sample standard deviation are calculated across these five scores, not across 25 independent experiments. Initialization and minibatch order vary; the shuffled-knowledge assignment also varies. The noun groups and pretrained embeddings stay fixed.
 
-| モデル | Accuracy | Balanced accuracy | F1 |
+### Results
+
+Values are mean ± sample standard deviation across five seeds. Balanced accuracy is the average of the correctly classified fractions within the possible and impossible classes, giving both classes equal weight.
+
+| Model | Accuracy | Balanced accuracy | F1 |
 |---|---:|---:|---:|
 | Majority | 0.683 ± 0.000 | 0.500 ± 0.000 | 0.000 ± 0.000 |
 | CBOW + MLP | 0.798 ± 0.010 | 0.744 ± 0.007 | 0.651 ± 0.011 |
@@ -61,46 +72,49 @@ MLPは隠れ層32ユニットの2層構成で、100 epoch学習した。
 | Knowledge rule | 0.785 ± 0.000 | 0.832 ± 0.000 | 0.739 ± 0.000 |
 | CBOW + knowledge | **0.972 ± 0.002** | **0.963 ± 0.003** | **0.956 ± 0.003** |
 
-世界知識モデルのbalanced accuracyは、CBOWだけのモデルより平均0.219高かった。また、属性を入れ替えただけの対照モデル(CBOW+shuffled knowledge)との差は平均0.266であった。このことから、改善は単に入力次元が増えたためではなく、名詞と属性の正しい対応を利用した結果であると考えられる。
+Adding knowledge increased balanced accuracy by 0.219 on average over CBOW alone and by 0.266 over shuffled knowledge. The shuffled comparison supports the idea that meaningful noun–feature associations helped, rather than input size alone.
 
-Knowledge ruleのbalanced accuracyは0.832であり、720組中155組を誤った。一方、CBOW + knowledgeはこの規則より平均0.131高かった。したがって、MLPは「条件をすべて満たせば可能」という規則をそのまま再現するだけでなく、CBOW表現と訓練例も利用していたと考えられる。
+The rule made 155 errors out of 720 examples. The learned knowledge model exceeded it by 0.131 in balanced accuracy, so it did not simply reproduce that rule. This comparison alone does not establish how much the learned model relies on word vectors versus general features; a features-only learned baseline would be needed to separate those contributions.
 
-### 正解を特徴から直接決めないための工夫
+### Avoiding an answer key disguised as knowledge
 
-名詞に付けた特徴から正解が自動的に決まるデータでは、世界知識モデルが高性能になるのは当然である。そのような実験にならないよう、次の方針を採用した。
+If the supplied facts directly encode the labels, high performance would say little about learning. To reduce this problem:
 
-- `can_fly`や`can_speak`のように、正解をそのまま表す項目は使用しなかった。
-- 各動詞には広すぎる基本条件を一つだけ設定した。例えば、`speak`に`animate`を設定しても、animateであるすべての名詞がcan speakと話せるわけではない。
-- 「動詞に設定した条件を主語がすべて満たせば「可能」とするKnowledge ruleを比較に加えた。この規則が155組を誤ることから、特徴だけで正解が決まるデータではないことを確認した。
-- 名詞の特徴をランダムに入れ替えたモデルも比較し、特徴の数(パラメータサイズ)が増えただけで性能が上がっていないかを確認した。
+- No features such as `can_fly` or `can_speak` are included.
+- Each verb has one broad condition. For example, `animate` is associated with `speak`, but not every animate subject can speak.
+- The rule baseline checks how far simply matching these conditions gets. Its 155 errors show that this particular rule is not the answer key; they do not prove that labels and features are independent.
+- The shuffled-knowledge model checks whether the correct association between nouns and features matters.
 
-ただし、正解データと属性など特徴データを同じ作成者が用意しているため、両者が完全に独立しているわけではない。
+The labels and features were developed within the same project, so their independence cannot be assumed. The coarse verb conditions also make this a limited rule baseline, not the strongest possible hand-written system.
 
-### 生成AIの利用
-本プロジェクトでは、文判定用データセットの作成、新規コードの作成・修正、READMEの表現整理にOpenAI Codexを使用した。方針やコードに対し、私が問題を指摘し改良することを繰り返したり、適宜コードを自分で手直ししたりした。
+### Use of generative AI
 
-### 実行方法
+I used OpenAI Codex to create the classification dataset, generate and revise new code, and edit the README. I repeatedly questioned the proposed design and code, requested improvements, and made manual changes. AI assistance was part of the development process rather than an independent source of ground-truth labels.
 
-リポジトリのルートで次を実行する。
+### Running the experiment
 
-```powershell
+From the repository root:
+
+```sh
 uv run --frozen python world_knowledge_experiment/run_repeated_experiment.py --jobs 5
 ```
 
-この環境では、5 seeds・100 epochの実行に約24秒かかった。結果は以下に保存される。
+This runs five seeds for 100 epochs each with up to five worker processes. Use `--jobs 1` for sequential execution. A previous run took about 24 seconds on the development machine; runtime varies by environment.
 
-- `results/repeated_results.json`: 各seedの指標と平均・標準偏差
-- `results/repeated_cross_validation_predictions.csv`: 5 seeds × 720組の予測
-- `results/seed_runs/seed_*/`: 各seedの詳細
+Outputs under `world_knowledge_experiment/`:
 
-自動テストは次のコマンドで実行できる。
+- `results/repeated_results.json`: per-seed metrics, means, and standard deviations.
+- `results/repeated_cross_validation_predictions.csv`: predictions for all 5 × 720 examples.
+- `results/seed_runs/seed_*/`: detailed results for each seed.
 
-```powershell
+Run the tests with:
+
+```sh
 uv run --frozen python -m unittest world_knowledge_experiment/test_experiment.py
 ```
 
-### 限界
+### Limitations
 
-本実験は、少数の語と手作業の属性・ラベルからなる人工データを用いたミニ実験である。したがって、世界知識一般の有効性を実証したものではない。
+This is an exploratory student experiment on a small, AI-assisted synthetic dataset. It demonstrates an improvement under the chosen vocabulary, labels, features, and noun splits. It does not establish the general effectiveness of world knowledge or a solution to language-model hallucinations.
 
-また、ここで示した標準偏差は学習時の乱数によるばらつきであり、別の語彙を選んだ場合の変動やラベル作成の主観性・恣意性は含まない。今回の結果は、外部から与えた一般属性をCBOW表現と組み合わせる方法が、この人工データ上で有効に働くことを確認したという、あくまで予備的な結果と解釈するのが無難である。
+The standard deviations reflect randomness in classifier training and, for the shuffled control, feature assignment. They do not measure uncertainty from selecting different vocabulary, annotators, noun splits, or CBOW pretraining runs. Independent human labeling and broader evaluation would be needed for stronger conclusions.

@@ -1,11 +1,11 @@
 {
-  "note": "名詞カテゴリと動詞を先に固定し、全組合せを残した。正例数を評価結果に合わせて増減していない。",
+  "note": "Noun categories and verbs were fixed before evaluation, and all combinations were retained. The number of positive examples was not adjusted to fit evaluation results.",
   "annotation_policy": [
-    "通常の個体・製品が通常の環境で持つ能力として判断する。",
-    "比喩、事故、特殊改造、非常に珍しい状況は除く。",
-    "動詞に目的語がない場合は、その種類の動作を普通に行えるかを判断する。",
-    "短距離でも通常個体が自力で飛べる鳥はflyを可能とする。",
-    "動物のthinkは単純な認知活動を含むものとする。"
+    "Judge the capabilities of typical individuals or products in ordinary environments.",
+    "Exclude metaphors, accidents, special modifications, and very unusual situations.",
+    "For verbs without an object, judge whether the subject can ordinarily perform that type of action.",
+    "Label fly as possible for birds whose typical individuals can fly unaided, even for short distances.",
+    "For animals, think includes simple cognitive activity."
   ],
   "positive_verbs": {
     "cat": ["walk", "eat", "grow", "sleep", "think", "hunt"],

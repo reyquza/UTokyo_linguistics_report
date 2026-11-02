@@ -1,5 +1,5 @@
 {
-  "note": "属性は動詞ごとの正解ではなく、名詞の一般的な分類・形態・人工物としての性質を表す。動詞のrequiresは十分条件ではなく、粗い典型的要件を1個だけ記載する。",
+  "note": "Features describe general categories, morphology, and artifact properties of nouns rather than verb-specific answers. Each verb lists one coarse typical condition under requires, not a sufficient condition.",
   "attributes": [
     "physical",
     "mobile",

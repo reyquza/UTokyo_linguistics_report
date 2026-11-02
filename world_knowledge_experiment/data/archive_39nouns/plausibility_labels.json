@@ -1,6 +1,6 @@
 {
-  "archive_note": "60名詞版へ拡張する前の39名詞版である。",
-  "note": "正解ラベルは世界知識とは別に置く。各名詞について、通常の現実世界で可能とした動詞だけを列挙する。",
+  "archive_note": "Archived 39-noun version, before expansion to 60 nouns.",
+  "note": "Labels are stored separately from knowledge. For each noun, list only the verbs labeled possible in ordinary real-world settings.",
   "positive_verbs": {
     "cat": ["walk", "eat", "grow", "sleep", "think"],
     "dog": ["walk", "eat", "grow", "sleep", "think"],

@@ -1,6 +1,6 @@
 {
-  "archive_note": "60名詞版へ拡張する前の39名詞版である。",
-  "note": "すべての名詞を一度ずつテスト側に置く5分割である。文ではなく名詞を単位として分割する。",
+  "archive_note": "Archived 39-noun version, before expansion to 60 nouns.",
+  "note": "Five folds test each noun once. Splits are by noun, not by sentence.",
   "folds": [
     {
       "name": "fold_1",

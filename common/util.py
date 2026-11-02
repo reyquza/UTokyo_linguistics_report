@@ -31,11 +31,11 @@ def create_comatrix(corpus, vocab_size, window_size=1):
         left = max(idx - window_size, 0)
         right = min(idx + window_size + 1, corpus_size)
 
-        # 左側
+        # Left context
         for context_id in corpus[left:idx]:
             co_matrix[word_id, context_id] += 1
 
-        # 右側
+        # Right context
         for context_id in corpus[idx+1:right]:
             co_matrix[word_id, context_id] += 1
 
@@ -45,7 +45,7 @@ def create_comatrix(corpus, vocab_size, window_size=1):
 def ppmi(C, eps=1e-8):
     M = np.zeros_like(C, dtype=np.float32)
     N = np.sum(C)
-    S = np.sum(C, axis=0) # そのidに対応する単語が何回出てきたか？
+    S = np.sum(C, axis=0) # Count occurrences of the word with this ID.
     total = C.shape[0] * C.shape[1]
     
     for i in range(C.shpae[0]):
@@ -123,13 +123,13 @@ def to_gpu(x):
 
 
 def most_similar(query, word_to_id, id_to_word, word_matrix, top=5):
-    '''類似単語の検索
+    '''Find similar words.
 
-    :param query: クエリ（テキスト）
-    :param word_to_id: 単語から単語IDへのディクショナリ
-    :param id_to_word: 単語IDから単語へのディクショナリ
-    :param word_matrix: 単語ベクトルをまとめた行列。各行に対応する単語のベクトルが格納されていることを想定する
-    :param top: 上位何位まで表示するか
+    :param query: Query word (text)
+    :param word_to_id: Dictionary mapping words to IDs
+    :param id_to_word: Dictionary mapping IDs to words
+    :param word_matrix: Matrix with one word vector per row
+    :param top: Number of nearest neighbors to display
     '''
     if query not in word_to_id:
         print('%s is not found' % query)

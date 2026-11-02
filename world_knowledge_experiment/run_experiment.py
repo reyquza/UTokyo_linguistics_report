@@ -1,5 +1,5 @@
-"""世界知識が文のもっともらしさ判断を助けるかを調べる。
-『ゼロから作るDeep Learning 2』コードだけで学習する。
+"""Test whether world knowledge improves sentence plausibility judgments.
+Train with NumPy and code based on Deep Learning from Scratch 2.
 """
 
 from __future__ import annotations
@@ -51,15 +51,15 @@ def load_json(path: Path) -> dict[str, Any]:
 
 
 def load_embeddings(path: Path) -> tuple[np.ndarray, dict[str, int]]:
-    """自分で学習させたCBOWパラメータをcbow_params.pklから読みこむ。"""
+    """Load pretrained CBOW parameters from a pickle file."""
     with path.open("rb") as file:
         params = pickle.load(file)
 
     required_keys = {"word_vecs", "word_to_id"}
     missing = required_keys - set(params)
-    # set(dict)はdictのkeyのみを取り出す
+    # set(dict) returns the dictionary keys.
     if missing:
-        raise ValueError(f"CBOWファイルに必要なキーが足りん: {sorted(missing)}")
+        raise ValueError(f"Missing required keys in the CBOW file: {sorted(missing)}")
 
     word_vecs = np.asarray(params["word_vecs"], dtype=np.float32)
     word_to_id = params["word_to_id"]
@@ -67,7 +67,7 @@ def load_embeddings(path: Path) -> tuple[np.ndarray, dict[str, int]]:
 
 
 def fold_nouns(folds: dict[str, Any]) -> list[str]:
-    """  noun_folds.json内の全名詞をlistとして取り出す """
+    """  Extract all nouns from noun_folds.json as a list. """
     return [
         noun
         for fold in folds["folds"]
@@ -81,61 +81,61 @@ def validate_data(
     folds: dict[str, Any],
     word_to_id: dict[str, int],
 ) -> None:
-    """JSONの不整合、名詞分割の漏れ、CBOW語彙漏れを検査する。"""
+    """Check data consistency, noun-fold coverage, and CBOW vocabulary coverage."""
     attributes = knowledge["attributes"]
     subjects = knowledge["subjects"]
     verbs = knowledge["verbs"]
     all_nouns = fold_nouns(folds)
 
     if len(attributes) != len(set(attributes)):
-        raise ValueError("attributesに重複があります。")
+        raise ValueError("attributes contains duplicates.")
     if len(folds["folds"]) < 2:
-        raise ValueError("名詞分割には2個以上のfoldが必要です。")
+        raise ValueError("Noun evaluation requires at least two folds.")
 
     fold_names = [fold["name"] for fold in folds["folds"]]
     if len(fold_names) != len(set(fold_names)):
-        raise ValueError("fold名に重複があります。")
+        raise ValueError("Fold names must be unique.")
     for fold in folds["folds"]:
         nouns = fold["test_nouns"]
         if not nouns:
-            raise ValueError(f"{fold['name']}のtest_nounsが空です。")
+            raise ValueError(f"{fold['name']}: test_nouns is empty.")
         if len(nouns) != len(set(nouns)):
-            raise ValueError(f"{fold['name']}内に重複名詞があります。")
+            raise ValueError(f"{fold['name']}: duplicate nouns within this fold.")
     if len(all_nouns) != len(set(all_nouns)):
-        raise ValueError("複数のfoldに同じ名詞が入っています。")
+        raise ValueError("A noun occurs in more than one fold.")
 
     if set(all_nouns) != set(subjects):
-        raise ValueError("noun_folds.jsonとworld_knowledge.jsonの名詞が一致しません。")
+        raise ValueError("Nouns do not match between noun_folds.json and world_knowledge.json.")
     if set(all_nouns) != set(labels["positive_verbs"]):
         raise ValueError(
-            "noun_folds.jsonとplausibility_labels.jsonの名詞が一致しません。"
+            "Nouns do not match between noun_folds.json and plausibility_labels.json."
         )
 
     attribute_set = set(attributes)
     for noun, active_attributes in subjects.items():
         unknown = set(active_attributes) - attribute_set
         if unknown:
-            raise ValueError(f"{noun}に未知の属性があります: {sorted(unknown)}")
+            raise ValueError(f"{noun}: unknown features: {sorted(unknown)}")
 
     verb_set = set(verbs)
     for verb, definition in verbs.items():
         required = definition["requires"]
         if not required:
-            raise ValueError(f"{verb}の要求属性が空です。")
+            raise ValueError(f"{verb}: required features are empty.")
         unknown = set(required) - attribute_set
         if unknown:
-            raise ValueError(f"{verb}に未知の要求属性があります: {sorted(unknown)}")
+            raise ValueError(f"{verb}: unknown required features: {sorted(unknown)}")
 
     for noun, positive_verbs in labels["positive_verbs"].items():
         unknown = set(positive_verbs) - verb_set
         if unknown:
-            raise ValueError(f"{noun}の正解に未知の動詞があります: {sorted(unknown)}")
+            raise ValueError(f"{noun}: labels contain unknown verbs: {sorted(unknown)}")
 
     needed_words = set(all_nouns) | verb_set
     missing_words = sorted(needed_words - set(word_to_id))
     if missing_words:
         raise ValueError(
-            "CBOW語彙にない単語があります。データを変えるか別のCBOWを指定してください: "
+            "Words missing from the CBOW vocabulary; update the data or use other embeddings: "
             f"{missing_words}"
         )
 
@@ -149,7 +149,7 @@ def make_examples(
     verbs: list[str],
     positive_verbs: dict[str, list[str]],
 ) -> list[dict[str, Any]]:
-    """名詞とすべての動詞を組み合わせて、文と正解ラベルを作る"""
+    """Combine each noun with every verb to create sentences and labels."""
     examples = []
     for noun in nouns:
         positive_set = set(positive_verbs[noun])
@@ -178,7 +178,7 @@ def normalized_embedding(
 
 
 def multi_hot(active: list[str], attribute_to_id: dict[str, int]) -> np.ndarray:
-    """ knowledge内のattribute中でactive(指定された属性)のみ1のmulti-hot vectorに変換 """
+    """ Encode active features as a multi-hot vector. """
     vector = np.zeros(len(attribute_to_id), dtype=np.float32)
     for name in active:
         vector[attribute_to_id[name]] = 1.0
@@ -192,7 +192,7 @@ def build_features(
     word_to_id: dict[str, int],
     add_knowledge: bool,
 ) -> tuple[np.ndarray, np.ndarray]:
-    """  各例を、MLPに入力できる数値ベクトルへ変換する """
+    """  Convert examples into numeric feature vectors for the MLP. """
     attribute_to_id = {
         name: index for index, name in enumerate(knowledge["attributes"])
     }
@@ -214,7 +214,7 @@ def build_features(
                 knowledge["verbs"][verb]["requires"], attribute_to_id
             )
             attribute_matches = subject_attributes * verb_requirements
-            """ ここの掛け算は、動詞が要求する属性のうち、名詞が実際に持っているもののみ１にするということ """
+            """ The product is 1 only for features required by the verb and present in the noun. """
             parts += [subject_attributes, verb_requirements, attribute_matches]
 
         rows.append(np.concatenate(parts))
@@ -231,7 +231,7 @@ def shuffled_subject_knowledge(
     nouns: list[str],
     seed: int,
 ) -> dict[str, Any]:
-    """名詞と属性の対応だけを壊し、次元数と属性分布は保つ。"""
+    """Shuffle noun-feature assignments while preserving size and feature distribution."""
     rng = np.random.default_rng(seed)
     original_indices = np.arange(len(nouns))
     while True:
@@ -254,7 +254,7 @@ def knowledge_rule_predict(
     examples: list[dict[str, Any]],
     knowledge: dict[str, Any],
 ) -> np.ndarray:
-    """要求属性がすべてそろえば可能、とする機械学習なしの規則。"""
+    """Predict possible if the noun has every required feature; no learning."""
     predictions = []
     for example in examples:
         subject_attributes = set(knowledge["subjects"][example["noun"]])
@@ -308,7 +308,7 @@ def classification_metrics(
     true_labels: np.ndarray,
     predicted_labels: np.ndarray,
 ) -> dict[str, Any]:
-    """ 解と予測を比較して、評価指標を計算 """
+    """ Compare labels and predictions to calculate evaluation metrics. """
     true_labels = np.asarray(true_labels)
     predicted_labels = np.asarray(predicted_labels)
     tp = int(np.sum((true_labels == 1) & (predicted_labels == 1)))
@@ -339,7 +339,7 @@ def summarize_folds(
     pooled_labels: np.ndarray,
     pooled_predictions: dict[str, np.ndarray],
 ) -> dict[str, Any]:
-    """ 各foldの結果と、すべての予測をまとめた結果を集計 """
+    """ Summarize per-fold metrics and pooled predictions. """
     metric_names = ["accuracy", "balanced_accuracy", "precision", "recall", "f1"]
     summary: dict[str, Any] = {}
 
@@ -664,7 +664,7 @@ def parse_args() -> argparse.Namespace:
         "--embeddings",
         type=Path,
         default=REPO_ROOT / "cbow_params.pkl",
-        help="CBOWのpickleファイル（リポジトリ直下の自作学習結果）",
+        help="CBOW pickle file (default: locally trained vectors at the repository root)",
     )
     parser.add_argument(
         "--output-dir",
