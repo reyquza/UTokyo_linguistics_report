@@ -42,8 +42,7 @@ Results are saved under [`world_knowledge_experiment/results/`](world_knowledge_
 
 - `world_knowledge_experiment/`: experiment code, data, report, and saved results.
 - `cbow.py`, `cbow_train.py`, `cbow_params.pkl`: CBOW implementation, training script, and pretrained vectors.
-- `common/`, `toolkits/`, `dataset/`: reusable layers, training utilities, and dataset helpers based on the book.
-- `deep-learning-from-scratch-2-master/`: downloaded reference code, retained unchanged.
+- `common/`, `dataset/`: reusable layers, training utilities, and dataset helpers based on the book.
 
 ## Scope and AI assistance
 
